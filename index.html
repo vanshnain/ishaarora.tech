@@ -1,72 +1,222 @@
-```html
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <title>Isha Arora | Official Website</title>
+    <title>Isha Arora | Coming Soon</title>
+
+    <meta name="description" content="Isha Arora's official website is currently under development.">
 
     <style>
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-            font-family: Arial, sans-serif;
         }
 
         body {
             min-height: 100vh;
+            font-family: Arial, Helvetica, sans-serif;
+            background: #0b0b0f;
+            color: #ffffff;
             display: flex;
             justify-content: center;
             align-items: center;
-            background: linear-gradient(135deg, #667eea, #764ba2);
-            color: white;
-            text-align: center;
+            overflow: hidden;
+        }
+
+        /* Background glow */
+        body::before {
+            content: "";
+            position: fixed;
+            width: 500px;
+            height: 500px;
+            background: #7c3aed;
+            border-radius: 50%;
+            filter: blur(150px);
+            opacity: 0.25;
+            top: -150px;
+            left: -150px;
+        }
+
+        body::after {
+            content: "";
+            position: fixed;
+            width: 450px;
+            height: 450px;
+            background: #2563eb;
+            border-radius: 50%;
+            filter: blur(150px);
+            opacity: 0.2;
+            bottom: -150px;
+            right: -100px;
         }
 
         .container {
-            padding: 40px;
+            position: relative;
+            width: 90%;
+            max-width: 850px;
+            padding: 70px 40px;
+            text-align: center;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            border-radius: 30px;
+            backdrop-filter: blur(20px);
+            box-shadow: 0 30px 80px rgba(0, 0, 0, 0.4);
+        }
+
+        .logo {
+            font-size: 22px;
+            font-weight: bold;
+            letter-spacing: 3px;
+            margin-bottom: 55px;
+            text-transform: uppercase;
+        }
+
+        .logo span {
+            color: #a78bfa;
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 9px 18px;
+            border-radius: 50px;
+            border: 1px solid rgba(167, 139, 250, 0.4);
+            background: rgba(124, 58, 237, 0.12);
+            color: #c4b5fd;
+            font-size: 13px;
+            letter-spacing: 1px;
+            margin-bottom: 25px;
         }
 
         h1 {
-            font-size: 52px;
-            margin-bottom: 15px;
+            font-size: clamp(42px, 7vw, 78px);
+            line-height: 1.05;
+            margin-bottom: 25px;
+            letter-spacing: -3px;
         }
 
-        p {
-            font-size: 20px;
-            margin-bottom: 30px;
+        h1 span {
+            background: linear-gradient(90deg, #a78bfa, #60a5fa);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
         }
 
-        .button {
-            display: inline-block;
-            padding: 14px 28px;
-            background: white;
-            color: #667eea;
-            text-decoration: none;
-            border-radius: 30px;
-            font-weight: bold;
-            transition: 0.3s;
+        .description {
+            max-width: 600px;
+            margin: auto;
+            color: #a1a1aa;
+            font-size: 18px;
+            line-height: 1.7;
         }
 
-        .button:hover {
-            transform: scale(1.05);
+        .loader {
+            width: 100%;
+            max-width: 300px;
+            height: 5px;
+            margin: 40px auto 20px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 20px;
+            overflow: hidden;
+        }
+
+        .loader-bar {
+            height: 100%;
+            width: 45%;
+            border-radius: 20px;
+            background: linear-gradient(90deg, #7c3aed, #60a5fa);
+            animation: loading 2s infinite ease-in-out;
+        }
+
+        @keyframes loading {
+            0% {
+                transform: translateX(-120%);
+            }
+
+            100% {
+                transform: translateX(250%);
+            }
         }
 
         .status {
-            margin-top: 30px;
-            font-size: 14px;
-            opacity: 0.8;
+            color: #71717a;
+            font-size: 13px;
+            letter-spacing: 1px;
+        }
+
+        .footer {
+            margin-top: 55px;
+            color: #52525b;
+            font-size: 12px;
+        }
+
+        .dot {
+            display: inline-block;
+            width: 7px;
+            height: 7px;
+            background: #22c55e;
+            border-radius: 50%;
+            margin-right: 7px;
+            box-shadow: 0 0 12px #22c55e;
+        }
+
+        @media (max-width: 600px) {
+            .container {
+                padding: 50px 25px;
+            }
+
+            .logo {
+                margin-bottom: 40px;
+            }
+
+            h1 {
+                letter-spacing: -2px;
+            }
+
+            .description {
+                font-size: 16px;
+            }
         }
     </style>
 </head>
 
 <body>
 
-    <div class="container">
+    <main class="container">
 
-        <h1>Hi, I'm Isha Arora 👋</h1>
+        <div class="logo">
+            Isha<span>Arora</span>
+        </div>
 
-        <p>Welcome to my website.</
-```
+        <div class="badge">
+            ✦ WEBSITE UNDER DEVELOPMENT
+        </div>
+
+        <h1>
+            Something<br>
+            <span>great is coming.</span>
+        </h1>
+
+        <p class="description">
+            We're currently working behind the scenes to build something
+            exciting. The new website will be launching soon.
+        </p>
+
+        <div class="loader">
+            <div class="loader-bar"></div>
+        </div>
+
+        <p class="status">
+            <span class="dot"></span>
+            Currently under development
+        </p>
+
+        <div class="footer">
+            © 2026 Isha Arora. All rights reserved.
+        </div>
+
+    </main>
+
+</body>
+</html>
