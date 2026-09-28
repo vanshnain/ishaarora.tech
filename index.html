@@ -1,491 +1,891 @@
 ```html
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <meta charset="UTF-8">
+
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0"
+  >
 
   <title>ResumeIQ — AI Resume Reviewer</title>
 
   <meta
     name="description"
-    content="Analyze your resume, find mistakes, improve your ATS score and make your CV stronger."
-  />
+    content="AI-powered resume reviewer that finds mistakes, ATS issues and gives actionable improvements."
+  >
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+  <link
+    rel="preconnect"
+    href="https://fonts.gstatic.com"
+    crossorigin
+  >
 
   <link
     href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap"
     rel="stylesheet"
-  />
+  >
 
-  <link rel="stylesheet" href="style.css" />
+  <link rel="stylesheet" href="style.css">
+
 </head>
+
 
 <body>
 
-  <div class="background">
-    <div class="orb orb-1"></div>
-    <div class="orb orb-2"></div>
-    <div class="grid"></div>
-  </div>
 
-  <nav class="navbar">
-    <div class="logo">
-      <span class="logo-icon">R</span>
-      <span>Resume<span>IQ</span></span>
-    </div>
+<!-- BACKGROUND -->
 
-    <div class="nav-links">
-      <a href="#how">How it works</a>
-      <a href="#features">Features</a>
-    </div>
+<div class="background">
 
-    <button class="nav-btn" onclick="scrollToUpload()">
-      Analyze Resume
-    </button>
-  </nav>
+  <div class="orb orb-1"></div>
 
+  <div class="orb orb-2"></div>
 
-  <main>
+  <div class="grid"></div>
 
-    <!-- HERO -->
+</div>
 
-    <section class="hero">
 
-      <div class="badge">
-        <span class="pulse"></span>
-        AI-powered resume analysis
-      </div>
 
-      <h1>
-        Make your resume
-        <span>impossible to ignore.</span>
-      </h1>
+<!-- NAVBAR -->
 
-      <p class="hero-text">
-        Upload your CV and discover mistakes, ATS issues,
-        skill gaps and better ways to present your experience.
-      </p>
+<nav class="navbar">
 
-      <button class="hero-btn" onclick="scrollToUpload()">
-        Analyze My Resume
-        <span>→</span>
-      </button>
+  <div class="logo">
 
-      <div class="trust">
-        <span>✓</span> Free analysis
-        <span>✓</span> No signup required
-        <span>✓</span> PDF & DOCX
-      </div>
+    <span class="logo-icon">R</span>
 
-    </section>
-
-
-    <!-- UPLOAD -->
-
-    <section class="upload-section" id="upload">
-
-      <div class="section-label">01 — UPLOAD</div>
-
-      <h2>Let's inspect your resume.</h2>
-
-      <p class="section-subtitle">
-        Drop your resume below and we'll look for the things
-        recruiters and ATS systems may notice.
-      </p>
-
-      <div
-        class="upload-box"
-        id="dropZone"
-        onclick="document.getElementById('resumeInput').click()"
-      >
-
-        <input
-          type="file"
-          id="resumeInput"
-          accept=".pdf,.doc,.docx,.txt"
-          hidden
-        />
-
-        <div class="upload-icon">
-          ↑
-        </div>
-
-        <h3>Drop your resume here</h3>
-
-        <p>
-          or <span>browse files</span>
-        </p>
-
-        <small>
-          PDF, DOC, DOCX or TXT · Maximum 10MB
-        </small>
-
-      </div>
-
-      <div class="file-preview" id="filePreview">
-
-        <div class="file-icon">📄</div>
-
-        <div class="file-info">
-          <strong id="fileName">resume.pdf</strong>
-          <span id="fileSize">0 KB</span>
-        </div>
-
-        <button onclick="removeFile(event)">×</button>
-
-      </div>
-
-      <button
-        class="analyze-btn"
-        id="analyzeBtn"
-        onclick="analyzeResume()"
-      >
-        Analyze Resume
-        <span>✦</span>
-      </button>
-
-    </section>
-
-
-    <!-- RESULTS -->
-
-    <section class="results" id="results">
-
-      <div class="section-label">02 — ANALYSIS</div>
-
-      <div class="results-header">
-
-        <div>
-          <h2>Your resume report.</h2>
-
-          <p>
-            Here's what we found. Fix the highlighted issues
-            to make your resume stronger.
-          </p>
-        </div>
-
-        <div class="score-card">
-
-          <div class="score-circle">
-            <span id="score">74</span>
-          </div>
-
-          <div>
-            <small>Resume Score</small>
-            <strong>/ 100</strong>
-          </div>
-
-        </div>
-
-      </div>
-
-
-      <div class="stats">
-
-        <div class="stat">
-          <span class="stat-number red" id="criticalCount">3</span>
-          <span>Critical issues</span>
-        </div>
-
-        <div class="stat">
-          <span class="stat-number yellow" id="warningCount">5</span>
-          <span>Improvements</span>
-        </div>
-
-        <div class="stat">
-          <span class="stat-number green" id="goodCount">12</span>
-          <span>Things done well</span>
-        </div>
-
-      </div>
-
-
-      <div class="issue-list" id="issueList">
-
-        <!-- ISSUE -->
-
-        <div class="issue critical">
-
-          <div class="issue-top">
-
-            <div class="issue-title">
-              <span class="issue-dot"></span>
-              Education ↔ Experience mismatch
-            </div>
-
-            <span class="tag critical-tag">
-              Review
-            </span>
-
-          </div>
-
-          <div class="issue-body">
-
-            <p>
-              Your resume shows a <strong>B.Sc. Computer Science</strong>
-              education, while one internship appears focused on
-              <strong>B.Com/accounting-related work</strong>.
-            </p>
-
-            <div class="notice">
-              <strong>Why this matters</strong>
-              <span>
-                The experience isn't necessarily wrong, but the
-                connection to your target CS profile isn't obvious.
-              </span>
-            </div>
-
-            <div class="suggestion">
-
-              <div class="suggestion-title">
-                ✦ Suggested improvement
-              </div>
-
-              <p>
-                Highlight transferable skills such as data handling,
-                Excel, analytics, automation or reporting. If relevant,
-                explain how the internship contributed to your technical
-                or analytical skills.
-              </p>
-
-              <button class="fix-btn">
-                Apply suggestion →
-              </button>
-
-            </div>
-
-          </div>
-
-        </div>
-
-
-        <!-- ISSUE -->
-
-        <div class="issue warning">
-
-          <div class="issue-top">
-
-            <div class="issue-title">
-              <span class="issue-dot"></span>
-              Skills aren't fully supported
-            </div>
-
-            <span class="tag warning-tag">
-              Improve
-            </span>
-
-          </div>
-
-          <div class="issue-body">
-
-            <p>
-              Some skills mentioned in your experience aren't visible
-              in your main Skills section.
-            </p>
-
-            <div class="chips">
-              <span>Microsoft Excel</span>
-              <span>Data Analysis</span>
-              <span>Reporting</span>
-            </div>
-
-          </div>
-
-        </div>
-
-
-        <!-- ISSUE -->
-
-        <div class="issue warning">
-
-          <div class="issue-top">
-
-            <div class="issue-title">
-              <span class="issue-dot"></span>
-              Experience descriptions are too generic
-            </div>
-
-            <span class="tag warning-tag">
-              Improve
-            </span>
-
-          </div>
-
-          <div class="issue-body">
-
-            <div class="comparison">
-
-              <div>
-                <label>BEFORE</label>
-                <p>
-                  "Worked on various tasks and helped the team."
-                </p>
-              </div>
-
-              <div class="arrow">→</div>
-
-              <div>
-                <label>AFTER</label>
-                <p>
-                  "Organized and analyzed operational data,
-                  improving reporting accuracy and workflow efficiency."
-                </p>
-              </div>
-
-            </div>
-
-          </div>
-
-        </div>
-
-
-        <!-- GOOD -->
-
-        <div class="issue good">
-
-          <div class="issue-top">
-
-            <div class="issue-title">
-              <span class="issue-dot"></span>
-              Contact information is clear
-            </div>
-
-            <span class="tag good-tag">
-              Good
-            </span>
-
-          </div>
-
-          <div class="issue-body">
-
-            <p>
-              Your email, phone number and professional links are
-              easy to identify.
-            </p>
-
-          </div>
-
-        </div>
-
-      </div>
-
-    </section>
-
-
-    <!-- FEATURES -->
-
-    <section class="features" id="features">
-
-      <div class="section-label">03 — FEATURES</div>
-
-      <h2>More than a spell checker.</h2>
-
-      <div class="feature-grid">
-
-        <div class="feature-card">
-          <div class="feature-icon">⌁</div>
-          <h3>ATS Analysis</h3>
-          <p>
-            Identify formatting and keyword issues that can affect
-            applicant tracking systems.
-          </p>
-        </div>
-
-        <div class="feature-card">
-          <div class="feature-icon">◎</div>
-          <h3>Profile Match</h3>
-          <p>
-            Compare education, experience, skills and projects
-            to identify inconsistencies.
-          </p>
-        </div>
-
-        <div class="feature-card">
-          <div class="feature-icon">✦</div>
-          <h3>Smart Rewriting</h3>
-          <p>
-            Turn weak descriptions into concise,
-            achievement-focused resume bullets.
-          </p>
-        </div>
-
-        <div class="feature-card">
-          <div class="feature-icon">✓</div>
-          <h3>Grammar Check</h3>
-          <p>
-            Find spelling, grammar, tense and wording issues
-            throughout your CV.
-          </p>
-        </div>
-
-      </div>
-
-    </section>
-
-
-    <!-- HOW IT WORKS -->
-
-    <section class="how" id="how">
-
-      <div class="section-label">04 — HOW IT WORKS</div>
-
-      <h2>Three steps. One stronger CV.</h2>
-
-      <div class="steps">
-
-        <div class="step">
-          <span>01</span>
-          <h3>Upload</h3>
-          <p>Upload your existing resume.</p>
-        </div>
-
-        <div class="step">
-          <span>02</span>
-          <h3>Analyze</h3>
-          <p>Our reviewer scans your content.</p>
-        </div>
-
-        <div class="step">
-          <span>03</span>
-          <h3>Improve</h3>
-          <p>Fix issues with actionable suggestions.</p>
-        </div>
-
-      </div>
-
-    </section>
-
-  </main>
-
-
-  <footer>
-
-    <div class="logo">
-      <span class="logo-icon">R</span>
+    <span>
       Resume<span>IQ</span>
-    </div>
-
-    <p>
-      Build a resume that gets noticed.
-    </p>
-
-    <span class="copyright">
-      © 2026 ResumeIQ
     </span>
 
-  </footer>
-
-
-  <div class="toast" id="toast">
-    Resume selected successfully.
   </div>
 
 
-  <script src="script.js"></script>
+  <div class="nav-links">
+
+    <a href="#how">
+      How it works
+    </a>
+
+    <a href="#features">
+      Features
+    </a>
+
+  </div>
+
+
+  <button
+    class="nav-btn"
+    onclick="scrollToUpload()"
+  >
+    Analyze Resume
+  </button>
+
+</nav>
+
+
+
+<main>
+
+
+<!-- HERO -->
+
+<section class="hero">
+
+  <div class="badge">
+
+    <span class="pulse"></span>
+
+    AI-powered resume analysis
+
+  </div>
+
+
+  <h1>
+
+    Make your resume
+
+    <span>
+      impossible to ignore.
+    </span>
+
+  </h1>
+
+
+  <p class="hero-text">
+
+    Upload your CV and discover mistakes,
+    ATS issues, skill gaps and better ways
+    to present your experience.
+
+  </p>
+
+
+  <button
+    class="hero-btn"
+    onclick="scrollToUpload()"
+  >
+
+    Analyze My Resume
+
+    <span>→</span>
+
+  </button>
+
+
+  <div class="trust">
+
+    <span>✓</span>
+    Free analysis
+
+    <span>✓</span>
+    No signup required
+
+    <span>✓</span>
+    PDF & DOCX
+
+  </div>
+
+</section>
+
+
+
+<!-- UPLOAD -->
+
+<section
+  class="upload-section"
+  id="upload"
+>
+
+  <div class="section-label">
+    01 — UPLOAD
+  </div>
+
+
+  <h2>
+    Let's inspect your resume.
+  </h2>
+
+
+  <p class="section-subtitle">
+
+    Drop your resume below and we'll look
+    for the things recruiters and ATS
+    systems may notice.
+
+  </p>
+
+
+
+  <!-- UPLOAD BOX -->
+
+  <div
+    class="upload-box"
+    id="dropZone"
+  >
+
+    <!-- IMPORTANT:
+         DO NOT REMOVE THIS INPUT -->
+
+    <input
+      type="file"
+      id="resumeInput"
+      accept=".pdf,.doc,.docx,.txt"
+      hidden
+    >
+
+
+    <div class="upload-icon">
+      ↑
+    </div>
+
+
+    <h3>
+      Drop your resume here
+    </h3>
+
+
+    <p>
+      or
+      <span>browse files</span>
+    </p>
+
+
+    <small>
+      PDF, DOC, DOCX or TXT · Maximum 10MB
+    </small>
+
+  </div>
+
+
+
+  <!-- FILE PREVIEW -->
+
+  <div
+    class="file-preview"
+    id="filePreview"
+  >
+
+    <div class="file-icon">
+      📄
+    </div>
+
+
+    <div class="file-info">
+
+      <strong id="fileName">
+        resume.pdf
+      </strong>
+
+      <span id="fileSize">
+        0 KB
+      </span>
+
+    </div>
+
+
+    <button
+      type="button"
+      onclick="removeFile(event)"
+      aria-label="Remove file"
+    >
+      ×
+    </button>
+
+  </div>
+
+
+
+  <!-- ANALYZE -->
+
+  <button
+    type="button"
+    class="analyze-btn"
+    id="analyzeBtn"
+    onclick="analyzeResume()"
+  >
+
+    Analyze Resume
+
+    <span>✦</span>
+
+  </button>
+
+</section>
+
+
+
+<!-- RESULTS -->
+
+<section
+  class="results"
+  id="results"
+>
+
+  <div class="section-label">
+    02 — ANALYSIS
+  </div>
+
+
+  <div class="results-header">
+
+    <div>
+
+      <h2>
+        Your resume report.
+      </h2>
+
+      <p>
+        Here's what we found.
+        Fix the highlighted issues
+        to make your resume stronger.
+      </p>
+
+    </div>
+
+
+    <div class="score-card">
+
+      <div class="score-circle">
+
+        <span id="score">
+          74
+        </span>
+
+      </div>
+
+
+      <div>
+
+        <small>
+          Resume Score
+        </small>
+
+        <strong>
+          / 100
+        </strong>
+
+      </div>
+
+    </div>
+
+  </div>
+
+
+
+  <!-- STATS -->
+
+  <div class="stats">
+
+    <div class="stat">
+
+      <span class="stat-number red">
+        3
+      </span>
+
+      <span>
+        Critical issues
+      </span>
+
+    </div>
+
+
+    <div class="stat">
+
+      <span class="stat-number yellow">
+        5
+      </span>
+
+      <span>
+        Improvements
+      </span>
+
+    </div>
+
+
+    <div class="stat">
+
+      <span class="stat-number green">
+        12
+      </span>
+
+      <span>
+        Things done well
+      </span>
+
+    </div>
+
+  </div>
+
+
+
+  <!-- ISSUE 1 -->
+
+  <div class="issue-list">
+
+
+    <div class="issue critical">
+
+      <div class="issue-top">
+
+        <div class="issue-title">
+
+          <span class="issue-dot"></span>
+
+          Education ↔ Experience mismatch
+
+        </div>
+
+
+        <span class="tag critical-tag">
+          Review
+        </span>
+
+      </div>
+
+
+      <div class="issue-body">
+
+        <p>
+
+          Your resume shows a
+          <strong>
+            B.Sc. Computer Science
+          </strong>
+
+          education, while one internship
+          appears focused on
+          <strong>
+            B.Com/accounting-related work
+          </strong>.
+
+        </p>
+
+
+        <div class="notice">
+
+          <strong>
+            Why this matters
+          </strong>
+
+          <span>
+
+            The experience isn't necessarily
+            wrong, but the connection to your
+            target CS profile isn't obvious.
+
+          </span>
+
+        </div>
+
+
+        <div class="suggestion">
+
+          <div class="suggestion-title">
+            ✦ Suggested improvement
+          </div>
+
+
+          <p>
+
+            Highlight transferable skills such
+            as data handling, Excel, analytics,
+            automation or reporting.
+
+          </p>
+
+
+          <button
+            type="button"
+            class="fix-btn"
+          >
+            Apply suggestion →
+          </button>
+
+        </div>
+
+      </div>
+
+    </div>
+
+
+
+    <!-- ISSUE 2 -->
+
+    <div class="issue warning">
+
+      <div class="issue-top">
+
+        <div class="issue-title">
+
+          <span class="issue-dot"></span>
+
+          Skills aren't fully supported
+
+        </div>
+
+
+        <span class="tag warning-tag">
+          Improve
+        </span>
+
+      </div>
+
+
+      <div class="issue-body">
+
+        <p>
+
+          Some skills mentioned in your
+          experience aren't visible in your
+          main Skills section.
+
+        </p>
+
+
+        <div class="chips">
+
+          <span>
+            Microsoft Excel
+          </span>
+
+          <span>
+            Data Analysis
+          </span>
+
+          <span>
+            Reporting
+          </span>
+
+        </div>
+
+      </div>
+
+    </div>
+
+
+
+    <!-- ISSUE 3 -->
+
+    <div class="issue warning">
+
+      <div class="issue-top">
+
+        <div class="issue-title">
+
+          <span class="issue-dot"></span>
+
+          Experience descriptions are too generic
+
+        </div>
+
+
+        <span class="tag warning-tag">
+          Improve
+        </span>
+
+      </div>
+
+
+      <div class="issue-body">
+
+        <div class="comparison">
+
+
+          <div>
+
+            <label>
+              BEFORE
+            </label>
+
+            <p>
+              "Worked on various tasks
+              and helped the team."
+            </p>
+
+          </div>
+
+
+          <div class="arrow">
+            →
+          </div>
+
+
+          <div>
+
+            <label>
+              AFTER
+            </label>
+
+            <p>
+
+              "Organized and analyzed
+              operational data, improving
+              reporting accuracy and
+              workflow efficiency."
+
+            </p>
+
+          </div>
+
+
+        </div>
+
+      </div>
+
+    </div>
+
+
+
+    <!-- GOOD -->
+
+    <div class="issue good">
+
+      <div class="issue-top">
+
+        <div class="issue-title">
+
+          <span class="issue-dot"></span>
+
+          Contact information is clear
+
+        </div>
+
+
+        <span class="tag good-tag">
+          Good
+        </span>
+
+      </div>
+
+
+      <div class="issue-body">
+
+        <p>
+
+          Your email, phone number and
+          professional links are easy to identify.
+
+        </p>
+
+      </div>
+
+    </div>
+
+
+  </div>
+
+</section>
+
+
+
+<!-- FEATURES -->
+
+<section
+  class="features"
+  id="features"
+>
+
+  <div class="section-label">
+    03 — FEATURES
+  </div>
+
+
+  <h2>
+    More than a spell checker.
+  </h2>
+
+
+  <div class="feature-grid">
+
+
+    <div class="feature-card">
+
+      <div class="feature-icon">
+        ⌁
+      </div>
+
+      <h3>
+        ATS Analysis
+      </h3>
+
+      <p>
+
+        Identify formatting and keyword
+        issues that can affect applicant
+        tracking systems.
+
+      </p>
+
+    </div>
+
+
+
+    <div class="feature-card">
+
+      <div class="feature-icon">
+        ◎
+      </div>
+
+      <h3>
+        Profile Match
+      </h3>
+
+      <p>
+
+        Compare education, experience,
+        skills and projects to identify
+        inconsistencies.
+
+      </p>
+
+    </div>
+
+
+
+    <div class="feature-card">
+
+      <div class="feature-icon">
+        ✦
+      </div>
+
+      <h3>
+        Smart Rewriting
+      </h3>
+
+      <p>
+
+        Turn weak descriptions into concise,
+        achievement-focused resume bullets.
+
+      </p>
+
+    </div>
+
+
+
+    <div class="feature-card">
+
+      <div class="feature-icon">
+        ✓
+      </div>
+
+      <h3>
+        Grammar Check
+      </h3>
+
+      <p>
+
+        Find spelling, grammar, tense and
+        wording issues throughout your CV.
+
+      </p>
+
+    </div>
+
+
+  </div>
+
+</section>
+
+
+
+<!-- HOW IT WORKS -->
+
+<section
+  class="how"
+  id="how"
+>
+
+  <div class="section-label">
+    04 — HOW IT WORKS
+  </div>
+
+
+  <h2>
+    Three steps. One stronger CV.
+  </h2>
+
+
+  <div class="steps">
+
+
+    <div class="step">
+
+      <span>
+        01
+      </span>
+
+      <h3>
+        Upload
+      </h3>
+
+      <p>
+        Upload your existing resume.
+      </p>
+
+    </div>
+
+
+
+    <div class="step">
+
+      <span>
+        02
+      </span>
+
+      <h3>
+        Analyze
+      </h3>
+
+      <p>
+        Our reviewer scans your content.
+      </p>
+
+    </div>
+
+
+
+    <div class="step">
+
+      <span>
+        03
+      </span>
+
+      <h3>
+        Improve
+      </h3>
+
+      <p>
+        Fix issues with actionable suggestions.
+      </p>
+
+    </div>
+
+
+  </div>
+
+</section>
+
+
+</main>
+
+
+
+<!-- FOOTER -->
+
+<footer>
+
+  <div class="logo">
+
+    <span class="logo-icon">
+      R
+    </span>
+
+    <span>
+      Resume<span>IQ</span>
+    </span>
+
+  </div>
+
+
+  <p>
+    Build a resume that gets noticed.
+  </p>
+
+
+  <span class="copyright">
+    © 2026 ResumeIQ
+  </span>
+
+</footer>
+
+
+
+<!-- TOAST -->
+
+<div
+  class="toast"
+  id="toast"
+>
+  Resume selected successfully.
+</div>
+
+
+
+<!-- JAVASCRIPT -->
+
+<script src="script.js"></script>
+
 
 </body>
+
 </html>
 ```
