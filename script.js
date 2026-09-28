@@ -1,256 +1,279 @@
 ```javascript
-const resumeInput = document.getElementById("resumeInput");
-const dropZone = document.getElementById("dropZone");
-const filePreview = document.getElementById("filePreview");
-const fileName = document.getElementById("fileName");
-const fileSize = document.getElementById("fileSize");
-const analyzeBtn = document.getElementById("analyzeBtn");
-const results = document.getElementById("results");
-const toast = document.getElementById("toast");
+document.addEventListener("DOMContentLoaded", () => {
 
-let selectedFile = null;
+  const resumeInput = document.getElementById("resumeInput");
+  const dropZone = document.getElementById("dropZone");
+  const filePreview = document.getElementById("filePreview");
+  const fileName = document.getElementById("fileName");
+  const fileSize = document.getElementById("fileSize");
+  const analyzeBtn = document.getElementById("analyzeBtn");
+  const results = document.getElementById("results");
+  const toast = document.getElementById("toast");
+
+  let selectedFile = null;
 
 
-/* ---------------------------
-   SCROLL
----------------------------- */
+  // =========================
+  // OPEN FILE PICKER
+  // =========================
 
-function scrollToUpload() {
-  document.getElementById("upload").scrollIntoView({
-    behavior: "smooth"
+  dropZone.addEventListener("click", () => {
+    resumeInput.click();
   });
-}
 
 
-/* ---------------------------
-   FILE SELECT
----------------------------- */
+  // =========================
+  // FILE SELECTED
+  // =========================
 
-resumeInput.addEventListener("change", function () {
+  resumeInput.addEventListener("change", (event) => {
 
-  if (this.files.length > 0) {
-    handleFile(this.files[0]);
-  }
+    const files = event.target.files;
 
-});
+    if (!files || files.length === 0) {
+      return;
+    }
 
+    handleFile(files[0]);
 
-/* ---------------------------
-   DRAG & DROP
----------------------------- */
+  });
 
-dropZone.addEventListener("dragover", function (e) {
 
-  e.preventDefault();
+  // =========================
+  // DRAG OVER
+  // =========================
 
-  dropZone.classList.add("dragging");
+  dropZone.addEventListener("dragover", (event) => {
 
-});
+    event.preventDefault();
 
+    dropZone.classList.add("dragging");
 
-dropZone.addEventListener("dragleave", function () {
+  });
 
-  dropZone.classList.remove("dragging");
 
-});
+  // =========================
+  // DRAG LEAVE
+  // =========================
 
+  dropZone.addEventListener("dragleave", () => {
 
-dropZone.addEventListener("drop", function (e) {
+    dropZone.classList.remove("dragging");
 
-  e.preventDefault();
+  });
 
-  dropZone.classList.remove("dragging");
 
-  const file = e.dataTransfer.files[0];
+  // =========================
+  // DROP FILE
+  // =========================
 
-  if (file) {
-    handleFile(file);
-  }
+  dropZone.addEventListener("drop", (event) => {
 
-});
+    event.preventDefault();
 
+    dropZone.classList.remove("dragging");
 
-/* ---------------------------
-   HANDLE FILE
----------------------------- */
+    const files = event.dataTransfer.files;
 
-function handleFile(file) {
+    if (!files || files.length === 0) {
+      return;
+    }
 
-  const allowedTypes = [
-    "application/pdf",
-    "application/msword",
-    "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
-    "text/plain"
-  ];
+    handleFile(files[0]);
 
-  const extension = file.name
-    .split(".")
-    .pop()
-    .toLowerCase();
+  });
 
-  const allowedExtensions = [
-    "pdf",
-    "doc",
-    "docx",
-    "txt"
-  ];
 
-  if (!allowedExtensions.includes(extension)) {
+  // =========================
+  // HANDLE FILE
+  // =========================
 
-    showToast("Please upload a PDF, DOCX or TXT file.");
+  function handleFile(file) {
 
-    return;
-  }
+    const extension = file.name
+      .split(".")
+      .pop()
+      .toLowerCase();
 
 
-  if (file.size > 10 * 1024 * 1024) {
+    const allowedExtensions = [
+      "pdf",
+      "doc",
+      "docx",
+      "txt"
+    ];
 
-    showToast("File must be smaller than 10MB.");
 
-    return;
-  }
+    if (!allowedExtensions.includes(extension)) {
 
+      showToast(
+        "Please upload PDF, DOC, DOCX or TXT."
+      );
 
-  selectedFile = file;
+      return;
+    }
 
-  fileName.textContent = file.name;
 
-  fileSize.textContent =
-    formatFileSize(file.size);
+    // Maximum 10 MB
 
-  filePreview.style.display = "flex";
+    if (file.size > 10 * 1024 * 1024) {
 
-  analyzeBtn.style.display = "inline-flex";
+      showToast(
+        "File is too large. Maximum size is 10MB."
+      );
 
-  analyzeBtn.style.alignItems = "center";
+      return;
+    }
 
-  analyzeBtn.style.gap = "10px";
 
-  showToast("Resume selected successfully.");
+    selectedFile = file;
 
-}
 
+    // Show file name
 
-/* ---------------------------
-   REMOVE FILE
----------------------------- */
+    fileName.textContent = file.name;
 
-function removeFile(event) {
 
-  event.stopPropagation();
+    // Show file size
 
-  selectedFile = null;
+    fileSize.textContent = formatFileSize(
+      file.size
+    );
 
-  resumeInput.value = "";
 
-  filePreview.style.display = "none";
+    // Show preview
 
-  analyzeBtn.style.display = "none";
+    filePreview.style.display = "flex";
 
-}
 
+    // Show analyze button
 
-/* ---------------------------
-   FILE SIZE
----------------------------- */
+    analyzeBtn.style.display = "inline-flex";
 
-function formatFileSize(bytes) {
+    analyzeBtn.style.alignItems = "center";
 
-  if (bytes < 1024) {
-    return bytes + " B";
-  }
+    analyzeBtn.style.gap = "10px";
 
-  if (bytes < 1024 * 1024) {
-    return (bytes / 1024).toFixed(1) + " KB";
-  }
-
-  return (bytes / (1024 * 1024)).toFixed(1) + " MB";
-}
-
-
-/* ---------------------------
-   ANALYZE
----------------------------- */
-
-function analyzeResume() {
-
-  if (!selectedFile) {
-
-    showToast("Upload your resume first.");
-
-    return;
-  }
-
-
-  analyzeBtn.innerHTML =
-    "Analyzing <span>✦</span>";
-
-  analyzeBtn.disabled = true;
-
-
-  /*
-    DEMO ANALYSIS
-
-    This currently displays the example
-    analysis included in index.html.
-
-    Later we can connect this function
-    to an AI backend/API.
-  */
-
-
-  setTimeout(function () {
-
-    results.classList.add("visible");
-
-    analyzeBtn.innerHTML =
-      "Analysis Complete ✓";
-
-    analyzeBtn.disabled = false;
-
-    results.scrollIntoView({
-      behavior: "smooth"
-    });
-
-  }, 1800);
-
-}
-
-
-/* ---------------------------
-   TOAST
----------------------------- */
-
-function showToast(message) {
-
-  toast.textContent = message;
-
-  toast.classList.add("show");
-
-  setTimeout(function () {
-
-    toast.classList.remove("show");
-
-  }, 2500);
-
-}
-
-
-/* ---------------------------
-   FIX BUTTONS
----------------------------- */
-
-document.addEventListener("click", function (e) {
-
-  if (e.target.classList.contains("fix-btn")) {
-
-    e.target.textContent = "Suggestion applied ✓";
-
-    e.target.style.opacity = ".6";
 
     showToast(
-      "Suggestion marked as applied."
+      "Resume uploaded successfully ✓"
     );
+
+  }
+
+
+  // =========================
+  // FORMAT FILE SIZE
+  // =========================
+
+  function formatFileSize(bytes) {
+
+    if (bytes < 1024) {
+      return bytes + " B";
+    }
+
+    if (bytes < 1024 * 1024) {
+      return (bytes / 1024).toFixed(1) + " KB";
+    }
+
+    return (bytes / (1024 * 1024)).toFixed(1) + " MB";
+
+  }
+
+
+  // =========================
+  // REMOVE FILE
+  // =========================
+
+  window.removeFile = function(event) {
+
+    if (event) {
+      event.stopPropagation();
+    }
+
+    selectedFile = null;
+
+    resumeInput.value = "";
+
+    filePreview.style.display = "none";
+
+    analyzeBtn.style.display = "none";
+
+  };
+
+
+  // =========================
+  // ANALYZE
+  // =========================
+
+  window.analyzeResume = function() {
+
+    if (!selectedFile) {
+
+      showToast(
+        "Please upload your resume first."
+      );
+
+      return;
+    }
+
+
+    analyzeBtn.disabled = true;
+
+    analyzeBtn.innerHTML =
+      'Analyzing <span>✦</span>';
+
+
+    setTimeout(() => {
+
+      results.classList.add("visible");
+
+      analyzeBtn.disabled = false;
+
+      analyzeBtn.innerHTML =
+        'Analysis Complete ✓';
+
+
+      results.scrollIntoView({
+        behavior: "smooth"
+      });
+
+    }, 1800);
+
+  };
+
+
+  // =========================
+  // SCROLL TO UPLOAD
+  // =========================
+
+  window.scrollToUpload = function() {
+
+    document
+      .getElementById("upload")
+      .scrollIntoView({
+        behavior: "smooth"
+      });
+
+  };
+
+
+  // =========================
+  // TOAST
+  // =========================
+
+  function showToast(message) {
+
+    toast.textContent = message;
+
+    toast.classList.add("show");
+
+
+    setTimeout(() => {
+
+      toast.classList.remove("show");
+
+    }, 2500);
 
   }
 
