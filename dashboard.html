@@ -1,0 +1,82 @@
+<!DOCTYPE HTML>
+<html>
+    <head>
+        <title>What's in my budget?</title>
+        <link rel="stylesheet" href="style.css">
+        <body>
+            <!-- Navigation Bar -->
+  <table width="100%">
+    <tr>
+      <td><h2>What's in My budget?</h2></td>
+      <td align="right">
+        <a href="index.html">Home</a>   
+        <a href="dashboard.html">Dashboard</a>   
+        <a href="add-expense.html">Add Expenses</a>   
+        <a href="saving-goals.html">Check Savings</a>   
+        <a href="budget-analysis.html">Analyse Budget</a>   
+        <a href="check-affordability.html">Check Affordability</a>
+      </td>
+    </tr>
+  </table>
+
+  <hr>
+
+            <main>
+                <h1><left><strong>Dashboard</strong></left></h1>
+
+                <p><left>Track your budget, expenses, and remaining balance.</left></p>
+
+                <form action="Total budget">
+                        <label for = "budget">Total Budget(₹)</label>
+                        <input type ="number" id="budget" name = "total budget" min="0" required>
+                        <button type = "submit">Save budget</button>
+                        </form>
+
+                <br><br>
+
+                <table border="1" cellpadding="10" cellspacing="0">
+                    <thead>
+                        <tr>
+                            <th>Total budget</th>
+                            <th>Total expenses</th>
+                            <th>Remaining Blance</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>₹<span id="display-budget">0</span></td>
+                                <td>₹<span id="display-expenses">0</span></td><td rowspan="2"></td>
+                                <td>₹ <span id="display-balance">0</span></td>
+                            </tr>
+                        </tbody>
+                        </table>
+
+                        <br><br>
+
+
+
+                    <form action="" method="get">
+                        <h3>Add New Expenses</h3>
+                        <label for="exp-title">Title:</label>
+                        <input type="text" id="exp-title" name="title" placeholder="e.g. food" required>
+
+                        <label for="exp-amount">Amount (₹):</label>
+                        <input type="number" id="exp-amount" name="amount" min="0" placeholder="e.g.200" required>
+
+                        <button type="submit">Add expense</button>
+                    </form>   
+                    </main>
+
+                              
+                
+            <br><br>
+
+            <footer>
+                <p>Built by Isha</p>
+            </footer>    
+
+            
+        <script src="script.js"></script>
+</body>
+    </head>
+</htmml>
