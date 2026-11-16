@@ -1,281 +1,245 @@
-```javascript
 document.addEventListener("DOMContentLoaded", () => {
+  // Load saved data from browser localStorage
+  let totalBudget = Number(localStorage.getItem("totalBudget")) || 0;
+  let expenses = JSON.parse(localStorage.getItem("expenses")) || [];
+  let goals = JSON.parse(localStorage.getItem("goals")) || [];
 
-  const resumeInput = document.getElementById("resumeInput");
-  const dropZone = document.getElementById("dropZone");
-  const filePreview = document.getElementById("filePreview");
-  const fileName = document.getElementById("fileName");
-  const fileSize = document.getElementById("fileSize");
-  const analyzeBtn = document.getElementById("analyzeBtn");
-  const results = document.getElementById("results");
-  const toast = document.getElementById("toast");
+  const page = window.location.pathname.toLowerCase();
 
-  let selectedFile = null;
+  // ==========================================
+  // 1. DASHBOARD PAGE (dashboard.html)
+  // ==========================================
+  if (page.includes("dashboard")) {
+    const forms = document.querySelectorAll("form");
+    const summaryCells = document.querySelectorAll('table[border="1"] tbody td');
 
+    function updateDashboard() {
+      const totalExp = expenses.reduce((sum, item) => sum + Number(item.amount), 0);
+      const remaining = totalBudget - totalExp;
 
-  // =========================
-  // OPEN FILE PICKER
-  // =========================
-
-  dropZone.addEventListener("click", () => {
-    resumeInput.click();
-  });
-
-
-  // =========================
-  // FILE SELECTED
-  // =========================
-
-  resumeInput.addEventListener("change", (event) => {
-
-    const files = event.target.files;
-
-    if (!files || files.length === 0) {
-      return;
+      if (summaryCells.length >= 3) {
+        summaryCells[0].innerText = `₹ ${totalBudget}`;
+        summaryCells[1].innerText = `₹ ${totalExp}`;
+        summaryCells[2].innerText = `₹ ${remaining}`;
+      }
     }
 
-    handleFile(files[0]);
+    updateDashboard();
 
-  });
-
-
-  // =========================
-  // DRAG OVER
-  // =========================
-
-  dropZone.addEventListener("dragover", (event) => {
-
-    event.preventDefault();
-
-    dropZone.classList.add("dragging");
-
-  });
-
-
-  // =========================
-  // DRAG LEAVE
-  // =========================
-
-  dropZone.addEventListener("dragleave", () => {
-
-    dropZone.classList.remove("dragging");
-
-  });
-
-
-  // =========================
-  // DROP FILE
-  // =========================
-
-  dropZone.addEventListener("drop", (event) => {
-
-    event.preventDefault();
-
-    dropZone.classList.remove("dragging");
-
-    const files = event.dataTransfer.files;
-
-    if (!files || files.length === 0) {
-      return;
+    // Form 1: Save Total Budget
+    if (forms[0]) {
+      forms[0].addEventListener("submit", (e) => {
+        e.preventDefault();
+        const budgetInput = forms[0].querySelector('input[type="number"]');
+        if (budgetInput) {
+          totalBudget = Number(budgetInput.value);
+          localStorage.setItem("totalBudget", totalBudget);
+          updateDashboard();
+          budgetInput.value = "";
+        }
+      });
     }
 
-    handleFile(files[0]);
+    // Form 2: Quick Add Expense
+    if (forms[1]) {
+      forms[1].addEventListener("submit", (e) => {
+        e.preventDefault();
+        const title = forms[1].querySelector('input[type="text"]').value;
+        const amount = Number(forms[1].querySelector('input[type="number"]').value);
+        const today = new Date().toLocaleDateString("en-GB").replace(/\//g, "-");
 
-  });
+        expenses.push({
+          date: today,
+          title: title,
+          category: "General",
+          payment: "UPI",
+          amount: amount
+        });
 
-
-  // =========================
-  // HANDLE FILE
-  // =========================
-
-  function handleFile(file) {
-
-    const extension = file.name
-      .split(".")
-      .pop()
-      .toLowerCase();
-
-
-    const allowedExtensions = [
-      "pdf",
-      "doc",
-      "docx",
-      "txt"
-    ];
-
-
-    if (!allowedExtensions.includes(extension)) {
-
-      showToast(
-        "Please upload PDF, DOC, DOCX or TXT."
-      );
-
-      return;
+        localStorage.setItem("expenses", JSON.stringify(expenses));
+        updateDashboard();
+        forms[1].reset();
+      });
     }
-
-
-    // Maximum 10 MB
-
-    if (file.size > 10 * 1024 * 1024) {
-
-      showToast(
-        "File is too large. Maximum size is 10MB."
-      );
-
-      return;
-    }
-
-
-    selectedFile = file;
-
-
-    // Show file name
-
-    fileName.textContent = file.name;
-
-
-    // Show file size
-
-    fileSize.textContent = formatFileSize(
-      file.size
-    );
-
-
-    // Show preview
-
-    filePreview.style.display = "flex";
-
-
-    // Show analyze button
-
-    analyzeBtn.style.display = "inline-flex";
-
-    analyzeBtn.style.alignItems = "center";
-
-    analyzeBtn.style.gap = "10px";
-
-
-    showToast(
-      "Resume uploaded successfully ✓"
-    );
-
   }
 
+  // ==========================================
+  // 2. ADD EXPENSE PAGE (add-expense.html)
+  // ==========================================
+  if (page.includes("add-expense")) {
+    const form = document.querySelector("form");
+    const tbody = document.querySelector('table[border="1"] tbody');
 
-  // =========================
-  // FORMAT FILE SIZE
-  // =========================
-
-  function formatFileSize(bytes) {
-
-    if (bytes < 1024) {
-      return bytes + " B";
+    function renderExpenses() {
+      if (!tbody || expenses.length === 0) return;
+      tbody.innerHTML = "";
+      expenses.forEach((exp) => {
+        tbody.innerHTML += `
+          <tr>
+            <td>${exp.date}</td>
+            <td>${exp.title}</td>
+            <td>${exp.category}</td>
+            <td>${exp.payment}</td>
+            <td>₹ ${exp.amount}</td>
+          </tr>
+        `;
+      });
     }
 
-    if (bytes < 1024 * 1024) {
-      return (bytes / 1024).toFixed(1) + " KB";
+    renderExpenses();
+
+    if (form) {
+      form.addEventListener("submit", (e) => {
+        e.preventDefault();
+        const title = form.querySelector('input[type="text"]').value;
+        const amount = Number(form.querySelector('input[type="number"]').value);
+        const selects = form.querySelectorAll("select");
+        const category = selects[0] ? selects[0].options[selects[0].selectedIndex].text : "Other";
+        const payment = selects[1] ? selects[1].options[selects[1].selectedIndex].text : "Cash";
+        const dateVal = form.querySelector('input[type="date"]').value;
+        const formattedDate = dateVal ? dateVal.split("-").reverse().join("-") : new Date().toLocaleDateString("en-GB").replace(/\//g, "-");
+
+        expenses.push({ date: formattedDate, title, category, payment, amount });
+        localStorage.setItem("expenses", JSON.stringify(expenses));
+        renderExpenses();
+        form.reset();
+      });
     }
-
-    return (bytes / (1024 * 1024)).toFixed(1) + " MB";
-
   }
 
+  // ==========================================
+  // 3. SAVINGS GOALS PAGE (saving-goals.html)
+  // ==========================================
+  if (page.includes("saving-goals")) {
+    const form = document.querySelector("form");
+    const tbody = document.querySelector('table[border="1"] tbody');
 
-  // =========================
-  // REMOVE FILE
-  // =========================
+    function renderGoals() {
+      if (!tbody || goals.length === 0) return;
+      tbody.innerHTML = "";
+      goals.forEach((g) => {
+        const percent = Math.min(100, Math.round((g.saved / g.target) * 100));
+        const filledBlocks = Math.round(percent / 10);
+        const bar = "█".repeat(filledBlocks) + "░".repeat(10 - filledBlocks);
 
-  window.removeFile = function(event) {
-
-    if (event) {
-      event.stopPropagation();
+        tbody.innerHTML += `
+          <tr>
+            <td>${g.name}</td>
+            <td>₹ ${g.target}</td>
+            <td>₹ ${g.saved}</td>
+            <td>${bar} ${percent}%</td>
+            <td>${g.deadline}</td>
+          </tr>
+        `;
+      });
     }
 
-    selectedFile = null;
+    renderGoals();
 
-    resumeInput.value = "";
+    if (form) {
+      form.addEventListener("submit", (e) => {
+        e.preventDefault();
+        const name = form.querySelector('input[type="text"]').value;
+        const nums = form.querySelectorAll('input[type="number"]');
+        const target = Number(nums[0].value);
+        const saved = Number(nums[1].value);
+        const dateVal = form.querySelector('input[type="date"]').value;
+        const deadline = dateVal ? dateVal.split("-").reverse().join("-") : "No Deadline";
 
-    filePreview.style.display = "none";
-
-    analyzeBtn.style.display = "none";
-
-  };
-
-
-  // =========================
-  // ANALYZE
-  // =========================
-
-  window.analyzeResume = function() {
-
-    if (!selectedFile) {
-
-      showToast(
-        "Please upload your resume first."
-      );
-
-      return;
+        goals.push({ name, target, saved, deadline });
+        localStorage.setItem("goals", JSON.stringify(goals));
+        renderGoals();
+        form.reset();
+      });
     }
+  }
 
+  // ==========================================
+  // 4. BUDGET ANALYSIS PAGE (budget-analysis.html)
+  // ==========================================
+  if (page.includes("budget-analysis")) {
+    const tbody = document.querySelector('table[border="1"] tbody');
+    const summaryList = document.querySelector("ul");
 
-    analyzeBtn.disabled = true;
+    if (expenses.length > 0 && tbody) {
+      const categoryTotals = {};
+      let grandTotal = 0;
 
-    analyzeBtn.innerHTML =
-      'Analyzing <span>✦</span>';
-
-
-    setTimeout(() => {
-
-      results.classList.add("visible");
-
-      analyzeBtn.disabled = false;
-
-      analyzeBtn.innerHTML =
-        'Analysis Complete ✓';
-
-
-      results.scrollIntoView({
-        behavior: "smooth"
+      expenses.forEach((exp) => {
+        categoryTotals[exp.category] = (categoryTotals[exp.category] || 0) + Number(exp.amount);
+        grandTotal += Number(exp.amount);
       });
 
-    }, 1800);
+      tbody.innerHTML = "";
+      let maxCat = { name: "-", amount: 0 };
+      let minCat = { name: "-", amount: Infinity };
 
-  };
+      for (const [cat, amt] of Object.entries(categoryTotals)) {
+        const blocks = Math.max(1, Math.round((amt / grandTotal) * 25));
+        const bar = "█".repeat(blocks);
 
+        tbody.innerHTML += `
+          <tr>
+            <td>${cat}</td>
+            <td>₹ ${amt}</td>
+            <td>${bar}</td>
+          </tr>
+        `;
 
-  // =========================
-  // SCROLL TO UPLOAD
-  // =========================
+        if (amt > maxCat.amount) maxCat = { name: cat, amount: amt };
+        if (amt < minCat.amount) minCat = { name: cat, amount: amt };
+      }
 
-  window.scrollToUpload = function() {
-
-    document
-      .getElementById("upload")
-      .scrollIntoView({
-        behavior: "smooth"
-      });
-
-  };
-
-
-  // =========================
-  // TOAST
-  // =========================
-
-  function showToast(message) {
-
-    toast.textContent = message;
-
-    toast.classList.add("show");
-
-
-    setTimeout(() => {
-
-      toast.classList.remove("show");
-
-    }, 2500);
-
+      if (summaryList) {
+        summaryList.innerHTML = `
+          <li><b>Total Spending:</b> ₹ ${grandTotal}</li>
+          <li><b>Most Expensive Category:</b> ${maxCat.name} (₹ ${maxCat.amount})</li>
+          <li><b>Least Expensive Category:</b> ${minCat.name} (₹ ${minCat.amount})</li>
+        `;
+      }
+    }
   }
 
+  // ==========================================
+  // 5. AFFORDABILITY CALCULATOR (check-affordability.html)
+  // ==========================================
+  if (page.includes("check-affordability")) {
+    const form = document.querySelector("form");
+    const resultList = document.querySelector("ul");
+
+    if (form && resultList) {
+      form.addEventListener("submit", (e) => {
+        e.preventDefault();
+        const itemName = form.querySelector('input[type="text"]').value;
+        const nums = form.querySelectorAll('input[type="number"]');
+        const cost = Number(nums[0].value);
+        const monthlySavings = Number(nums[1].value);
+        const monthlyBills = Number(nums[2].value);
+
+        const disposable = monthlySavings - monthlyBills;
+        let status = "";
+        let analysis = "";
+
+        if (disposable <= 0) {
+          status = "❌ Not Recommended Right Now";
+          analysis = "Your monthly bills exceed or equal your monthly savings. Focus on reducing fixed costs first.";
+        } else if (cost <= disposable) {
+          status = "✅ Yes, You Can Afford It!";
+          analysis = `It fits comfortably within your extra monthly savings (₹ ${disposable}) without affecting your bills.`;
+        } else {
+          const monthsNeeded = Math.ceil(cost / disposable);
+          status = "⏳ Save Before Buying";
+          analysis = `You need to save for <b>${monthsNeeded} more month(s)</b> (at ₹ ${disposable}/month after bills) to afford this safely.`;
+        }
+
+        resultList.innerHTML = `
+          <li>
+            <b>Item: ${itemName} (₹ ${cost})</b><br>
+            Status: ${status}<br>
+            Analysis: ${analysis}
+          </li>
+        `;
+      });
+    }
+  }
 });
-```
