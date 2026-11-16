@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Affordability Calculator - What's in my budget?</title>
+  <link rel="stylesheet" href="style.css"
+</head>
+<body>
+
+  <!-- Navigation Bar -->
+ <!-- Navigation Bar -->
+  <table width="100%">
+    <tr>
+      <td><h2>What's in My budget?</h2></td>
+      <td align="right">
+        <a href="index.html">Home</a>   
+        <a href="dashboard.html">Dashboard</a>   
+        <a href="add-expense.html">Add Expenses</a>   
+        <a href="saving-goals.html">Check Savings</a>   
+        <a href="budget-analysis.html">Analyse Budget</a>   
+        <a href="check-affordability.html">Check Affordability</a>
+      </td>
+    </tr>
+  </table>
+
+  <hr>
+  <hr>
+
+  <!-- Page Title -->
+  <h2>Affordability Calculator</h2>
+  <p>Check if a purchase fits your budget before you spend your hard-earned money!</p>
+
+  <!-- Input Form -->
+  <form action="" method="get">
+    <table cellpadding="8">
+      <tr>
+        <td><label for="item-name">Item Name:</label></td>
+        <td><input type="text" id="item-name" name="item_name" placeholder="iPhone 15, Gym Membership" required></td>
+      </tr>
+      <tr>
+        <td><label for="item-cost">Item Cost (₹):</label></td>
+        <td><input type="number" id="item-cost" name="item_cost" min="1" placeholder="e.g. 50000" required></td>
+      </tr>
+      <tr>
+        <td><label for="monthly-savings">Your Monthly Savings (₹):</label></td>
+        <td><input type="number" id="monthly-savings" name="monthly_savings" min="0" placeholder="e.g. 15000" required></td>
+      </tr>
+      <tr>
+        <td><label for="monthly-bills">Your Monthly Bills/Fixed Costs (₹):</label></td>
+        <td><input type="number" id="monthly-bills" name="monthly_bills" min="0" placeholder="e.g. 10000" required></td>
+      </tr>
+      <tr>
+        <td></td>
+        <td><button type="submit">Check Affordability</button></td>
+      </tr>
+    </table>
+  </form>
+
+  <hr>
+
+  <!-- Results View Scenario Preview (Plain static demo) -->
+  <h3>Affordability Check Result</h3>
+  <ul>
+    <li>
+      <b>Item: Laptop (₹ 45,000)</b> <br>
+      Status: Can I Afford It? <br>
+      Analysis: Yes, but you need to save for 3 more months based on your monthly savings, or you can buy it now if using your emergency fund.
+    </li>
+    <br>
+    <li>
+      <b>Item: Brand New Shoes (₹ 8,000)</b> <br>
+      Status: Can I Afford It? <br>
+      Analysis: Yes! It fits within your extra monthly savings after bills without affecting your goal.
+    </li>
+  </ul>
+
+  <br><hr>
+
+  <!-- Footer -->
+  <p>Built by Isha | Student Project</p>
+
+<script src="script.js"></script>
+</body>
+</html>
