@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Add Expense - What's in my budget?</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+
+
+<body> 
+  <!-- Navigation Bar -->
+  <table width="100%">
+    <tr>
+      <td><h2>What's in My budget?</h2></td>
+      <td align="right">
+        <a href="index.html">Home</a>   
+        <a href="dashboard.html">Dashboard</a>   
+        <a href="add-expense.html">Add Expenses</a>   
+        <a href="saving-goals.html">Check Savings</a>   
+        <a href="budget-analysis.html">Analyse Budget</a>   
+        <a href="check-affordability.html">Check Affordability</a>
+      </td>
+    </tr>
+  </table>
+
+  <hr>
+
+  <hr>
+
+  
+  <h2>Add New Expense</h2>
+  <p>Record your daily spending to keep track of your money.</p>
+
+ 
+  <form action="" method="get">
+    <table cellpadding="8">
+      
+      <!-- 1. Expense Title -->
+      <tr>
+        <td><label for="title">Expense Title / Item:</label></td>
+        <td><input type="text" id="title" name="title" placeholder="e.g. Groceries, College Canteen" required></td>
+      </tr>
+
+      <!-- 2. Amount -->
+      <tr>
+        <td><label for="amount">Amount (₹):</label></td>
+        <td><input type="number" id="amount" name="amount" min="1" placeholder="e.g. 150" required></td>
+      </tr>
+
+      <!-- 3. Category Dropdown -->
+      <tr>
+        <td><label for="category">Category:</label></td>
+        <td>
+          <select id="category" name="category">
+            <option value="food">Food & Dining</option>
+            <option value="transport">Transport / Travel</option>
+            <option value="bills">Bills & Utilities</option>
+            <option value="shopping">Shopping</option>
+            <option value="entertainment">Entertainment</option>
+            <option value="other">Other</option>
+          </select>
+        </td>
+      </tr>
+
+      <!-- 4. Date Picker -->
+      <tr>
+        <td><label for="exp-date">Date:</label></td>
+        <td><input type="date" id="exp-date" name="exp_date" required></td>
+      </tr>
+
+      <!-- 5. Payment Mode -->
+      <tr>
+        <td>
+            <label for="payment">Payment Method:</label>
+        </td>
+        <td>
+          <select id="payment" name="payment">
+            <option value="upi">UPI / Online</option>
+            <option value="cash">Cash</option>
+            <option value="card">Card</option>
+          </select>
+        </td>
+      </tr>
+
+      <!-- 6. Submit Button -->
+      <tr>
+        <td></td>
+        <td><button type="submit">Save Expense</button></td>
+      </tr>
+
+    </table>
+  </form>
+
+  <br><hr>
+
+  <!-- Recent Expenses Table Preview -->
+  <h3>Recently Added Expenses</h3>
+  <table border="1" cellpadding="8" cellspacing="0" width="80%">
+    <thead>
+      <tr>
+        <th>Date</th>
+        <th>Item Title</th>
+        <th>Category</th>
+        <th>Payment Method</th>
+        <th>Amount (₹)</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>10-11-2026</td>
+        <td>Auto Fare</td>
+        <td>Transport</td>
+        <td>UPI</td>
+        <td>₹ 50</td>
+      </tr>
+      <tr>
+        <td>10-11-2026</td>
+        <td>Lunch Canteen</td>
+        <td>Food</td>
+        <td>Cash</td>
+        <td>₹ 120</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <br><hr>
+
+  <!-- Footer -->
+  <p>Built by Isha | Student Project</p>
+
+  <script src="script.js"></script>
+</body>
+
+
+</html>
